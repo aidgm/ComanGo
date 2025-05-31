@@ -12,9 +12,12 @@ namespace ComanGo
 {
     public partial class FormMenu : Form
     {
-        public FormMenu()
+        private int idEmpleadoActual;
+
+        public FormMenu(int idEmpleado)
         {
             InitializeComponent();
+            this.idEmpleadoActual = idEmpleado;
         }
         public FormMenu(Point posicionFormulario)
         {
@@ -36,7 +39,19 @@ namespace ComanGo
 
         private void btnMesas_Click(object sender, EventArgs e)
         {
-            CargarEnPanel(new UserControlMesas());
+            CargarEnPanel(new UserControlMesas(idEmpleadoActual));
+        }
+
+        private void btnComandas_Click(object sender, EventArgs e)
+        {
+            CargarEnPanel(new UserControlHistorialComandacs());
+
+        }
+
+        private void btnEmpleados_Click(object sender, EventArgs e)
+        {
+            bool esAdmin = Conexion.RolUsuarioActual == "admin";
+            CargarEnPanel(new UserControlEmpleados(esAdmin));
         }
     }
 }

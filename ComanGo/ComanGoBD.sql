@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS Empleados (
     IdEmpleado INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(50),
     Usuario VARCHAR(30) UNIQUE,
-    Contrasena VARCHAR(30)
+    Contrasena VARCHAR(30),
+    Rol VARCHAR(20) DEFAULT 'empleado'
+
 );
 
 -- Tabla de productos
@@ -48,9 +50,9 @@ CREATE TABLE IF NOT EXISTS DetalleComanda (
 );
 
 -- Insertar empleados de ejemplo
-INSERT INTO Empleados (Nombre, Usuario, Contrasena) VALUES
-('Ana García', 'ana', '1234'),
-('Carlos López', 'carlos', 'abcd');
+INSERT INTO Empleados (Nombre, Usuario, Contrasena, Rol) VALUES
+('Ana García', 'ana', '1234', 'admin'),
+('Carlos López', 'carlos', 'abcd', 'empleado');
 
 -- Insertar productos de ejemplo
 INSERT INTO Productos (Nombre, Precio) VALUES

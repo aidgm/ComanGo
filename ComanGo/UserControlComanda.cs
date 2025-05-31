@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,13 @@ namespace ComanGo
         private string nombreMesa;
         private decimal total = 0;
 
+        private int idEmpleadoActual = 1; // Reemplaza con valor real si puedes pasarlo
+        private int idMesaActual = 0;
+        private int idComandaActual = 0;
+
+        private List<(string nombre, int cantidad, decimal precio)> listaPedido = new();
+
+
         // Simulación de productos disponibles
         private Dictionary<string, decimal> productosDisponibles = new Dictionary<string, decimal>
     {
@@ -24,19 +32,37 @@ namespace ComanGo
         { "Croissant", 1.80m }
     };
 
-        public UserControlComanda(string mesa)
+        public UserControlComanda(string nombreMesa, int idMesa, int idEmpleado)
         {
             InitializeComponent();
-            nombreMesa = mesa;
+
+            this.nombreMesa = nombreMesa;
+            this.idMesaActual = idMesa;
+            this.idEmpleadoActual = idEmpleado;
 
             lblTitulo.Text = $"Comanda - {nombreMesa}";
 
-            // Cargar productos en el ComboBox
             cbProductos.DataSource = new BindingSource(productosDisponibles, null);
             cbProductos.DisplayMember = "Key";
             cbProductos.ValueMember = "Value";
 
             lblTotal.Text = "Total: 0.00 €";
+
+            CrearNuevaComanda(); // ⬅️ Importante
+        }
+
+        private void CrearNuevaComanda()
+        {
+            using var conn = new MySqlConnection(Conexion.ConnectionString);
+            conn.Open();
+
+            var cmd = new MySqlCommand(
+                "INSERT INTO Comandas (IdEmpleado, IdMesa, Estado) VALUES (@emp, @mesa, 'Finalizada'); SELECT LAST_INSERT_ID();",
+                conn);
+            cmd.Parameters.AddWithValue("@emp", idEmpleadoActual);
+            cmd.Parameters.AddWithValue("@mesa", idMesaActual);
+
+            idComandaActual = Convert.ToInt32(cmd.ExecuteScalar());
         }
 
         private void UserControlComanda_Load(object sender, EventArgs e)
@@ -58,6 +84,9 @@ namespace ComanGo
             // Mostrar en la lista
             lstProductos.Items.Add($"{nombreProducto} x{cantidad} - {subtotal:0.00} €");
 
+            listaPedido.Add((nombreProducto, cantidad, precioUnitario));
+
+
             // Actualizar total
             lblTotal.Text = $"Total: {total:0.00} €";
 
@@ -75,6 +104,21 @@ namespace ComanGo
             }
 
             MessageBox.Show($"Comanda de {nombreMesa} finalizada.\nTotal: {total:0.00} €", "Comanda cerrada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using var conn = new MySqlConnection(Conexion.ConnectionString);
+            conn.Open();
+
+            foreach (var item in listaPedido)
+            {
+                var cmd = new MySqlCommand(
+                    "INSERT INTO DetalleComanda (IdComanda, IdProducto, Cantidad) " +
+                    "VALUES (@com, (SELECT IdProducto FROM Productos WHERE Nombre = @nom), @cant)", conn);
+                cmd.Parameters.AddWithValue("@com", idComandaActual);
+                cmd.Parameters.AddWithValue("@nom", item.nombre);
+                cmd.Parameters.AddWithValue("@cant", item.cantidad);
+                cmd.ExecuteNonQuery();
+            }
+
+            listaPedido.Clear();
 
             // Aquí podrías guardar en base de datos o archivo CSV en el futuro
             lstProductos.Items.Clear();

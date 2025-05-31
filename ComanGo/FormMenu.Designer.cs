@@ -162,6 +162,7 @@
             btnEmpleados.TabIndex = 0;
             btnEmpleados.Text = "Empleados";
             btnEmpleados.UseVisualStyleBackColor = true;
+            btnEmpleados.Click += btnEmpleados_Click;
             // 
             // pbEmpleados
             // 
@@ -226,6 +227,7 @@
             btnComandas.TabIndex = 0;
             btnComandas.Text = "Comandas";
             btnComandas.UseVisualStyleBackColor = true;
+            btnComandas.Click += btnComandas_Click;
             // 
             // pictureBox1
             // 

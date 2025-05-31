@@ -121,9 +121,20 @@ namespace ComanGo
                 using var reader = cmd.ExecuteReader();
                 if (reader.HasRows)
                 {
-                    FormMenu menu = new FormMenu();
-                    menu.Show();
-                    this.Hide();
+                    int idEmpleado = 0;
+
+                    if (reader.Read())
+                    {
+                        idEmpleado = Convert.ToInt32(reader["IdEmpleado"]);
+                        Conexion.UsuarioActual = reader["Usuario"].ToString(); // Guarda el usuario
+                        Conexion.RolUsuarioActual = reader["Rol"].ToString();  // Guarda el rol
+
+                        FormMenu menu = new FormMenu(idEmpleado);
+                        menu.Show();
+                        this.Hide();
+                    }
+
+
                 }
                 else
                 {
