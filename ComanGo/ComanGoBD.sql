@@ -1,0 +1,71 @@
+
+DROP DATABASE IF EXISTS ComanGoDB;
+CREATE DATABASE ComanGoDB;
+USE ComanGoDB;
+
+
+
+-- Tabla de empleados
+CREATE TABLE IF NOT EXISTS Empleados (
+    IdEmpleado INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50),
+    Usuario VARCHAR(30) UNIQUE,
+    Contrasena VARCHAR(30)
+);
+
+-- Tabla de productos
+CREATE TABLE IF NOT EXISTS Productos (
+    IdProducto INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50),
+    Precio DECIMAL(10, 2)
+);
+
+-- Tabla de mesas
+CREATE TABLE IF NOT EXISTS Mesas (
+    IdMesa INT AUTO_INCREMENT PRIMARY KEY,
+    NombreMesa VARCHAR(20)
+);
+
+-- Tabla de comandas
+CREATE TABLE IF NOT EXISTS Comandas (
+    IdComanda INT AUTO_INCREMENT PRIMARY KEY,
+    IdEmpleado INT,
+    IdMesa INT,
+    Fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Estado VARCHAR(20),
+    FOREIGN KEY (IdEmpleado) REFERENCES Empleados(IdEmpleado),
+    FOREIGN KEY (IdMesa) REFERENCES Mesas(IdMesa)
+);
+
+-- Tabla detalle de comandas
+CREATE TABLE IF NOT EXISTS DetalleComanda (
+    IdDetalle INT AUTO_INCREMENT PRIMARY KEY,
+    IdComanda INT,
+    IdProducto INT,
+    Cantidad INT,
+    FOREIGN KEY (IdComanda) REFERENCES Comandas(IdComanda),
+    FOREIGN KEY (IdProducto) REFERENCES Productos(IdProducto)
+);
+
+-- Insertar empleados de ejemplo
+INSERT INTO Empleados (Nombre, Usuario, Contrasena) VALUES
+('Ana García', 'ana', '1234'),
+('Carlos López', 'carlos', 'abcd');
+
+-- Insertar productos de ejemplo
+INSERT INTO Productos (Nombre, Precio) VALUES
+('Café', 1.50),
+('Tostada', 2.00),
+('Zumo', 2.20),
+('Croissant', 1.80),
+('Bocadillo', 3.50),
+('Agua', 1.00),
+('Refresco', 1.80);
+
+-- Insertar mesas de ejemplo
+INSERT INTO Mesas (NombreMesa) VALUES
+('Mesa 1'),
+('Mesa 2'),
+('Mesa 3'),
+('Barra 1'),
+('Barra 2');
