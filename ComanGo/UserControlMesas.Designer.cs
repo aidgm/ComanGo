@@ -31,50 +31,52 @@
             btnAgregarMesa = new Button();
             panelMesas = new FlowLayoutPanel();
             btnEliminar = new Button();
-            panelMesas.SuspendLayout();
             SuspendLayout();
             // 
             // btnAgregarMesa
             // 
-            btnAgregarMesa.Dock = DockStyle.Top;
-            btnAgregarMesa.Location = new Point(0, 0);
+            btnAgregarMesa.BackColor = Color.ForestGreen;
+            btnAgregarMesa.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnAgregarMesa.ForeColor = Color.Yellow;
+            btnAgregarMesa.Location = new Point(22, 28);
             btnAgregarMesa.Name = "btnAgregarMesa";
-            btnAgregarMesa.Size = new Size(800, 40);
+            btnAgregarMesa.Size = new Size(231, 65);
             btnAgregarMesa.TabIndex = 0;
-            btnAgregarMesa.Text = "Agregar mesa";
-            btnAgregarMesa.UseVisualStyleBackColor = true;
+            btnAgregarMesa.Text = "Agregar";
+            btnAgregarMesa.UseVisualStyleBackColor = false;
             btnAgregarMesa.Click += btnAgregarMesa_Click;
             // 
             // panelMesas
             // 
             panelMesas.AutoScroll = true;
-            panelMesas.Controls.Add(btnEliminar);
-            panelMesas.Dock = DockStyle.Fill;
-            panelMesas.Location = new Point(0, 40);
+            panelMesas.Location = new Point(22, 99);
             panelMesas.Name = "panelMesas";
             panelMesas.Padding = new Padding(10);
-            panelMesas.Size = new Size(800, 460);
+            panelMesas.Size = new Size(663, 353);
             panelMesas.TabIndex = 1;
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(13, 13);
+            btnEliminar.BackColor = Color.ForestGreen;
+            btnEliminar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnEliminar.ForeColor = Color.Yellow;
+            btnEliminar.Location = new Point(454, 28);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(800, 40);
+            btnEliminar.Size = new Size(231, 65);
             btnEliminar.TabIndex = 0;
             btnEliminar.Text = "Eliminar";
-            btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.UseVisualStyleBackColor = false;
             btnEliminar.Click += btnEliminar_Click;
             // 
             // UserControlMesas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnEliminar);
             Controls.Add(panelMesas);
             Controls.Add(btnAgregarMesa);
             Name = "UserControlMesas";
             Size = new Size(800, 500);
-            panelMesas.ResumeLayout(false);
             ResumeLayout(false);
         }
 
