@@ -41,7 +41,7 @@
             // 
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblNombre.Location = new Point(251, 94);
+            lblNombre.Location = new Point(251, 101);
             lblNombre.Name = "lblNombre";
             lblNombre.Size = new Size(89, 28);
             lblNombre.TabIndex = 0;
@@ -49,16 +49,17 @@
             // 
             // txtNombre
             // 
+            txtNombre.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtNombre.Location = new Point(376, 95);
             txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(174, 27);
+            txtNombre.Size = new Size(174, 34);
             txtNombre.TabIndex = 1;
             // 
             // lblPrecio
             // 
             lblPrecio.AutoSize = true;
             lblPrecio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblPrecio.Location = new Point(251, 175);
+            lblPrecio.Location = new Point(251, 185);
             lblPrecio.Name = "lblPrecio";
             lblPrecio.Size = new Size(70, 28);
             lblPrecio.TabIndex = 2;
@@ -66,9 +67,10 @@
             // 
             // txtPrecio
             // 
+            txtPrecio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPrecio.Location = new Point(376, 179);
             txtPrecio.Name = "txtPrecio";
-            txtPrecio.Size = new Size(174, 27);
+            txtPrecio.Size = new Size(174, 34);
             txtPrecio.TabIndex = 3;
             // 
             // btnGuardar

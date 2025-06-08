@@ -55,7 +55,7 @@
             // 
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblNombre.Location = new Point(164, 74);
+            lblNombre.Location = new Point(158, 81);
             lblNombre.Name = "lblNombre";
             lblNombre.Size = new Size(85, 28);
             lblNombre.TabIndex = 1;
@@ -63,16 +63,17 @@
             // 
             // txtNombre
             // 
+            txtNombre.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtNombre.Location = new Point(286, 75);
             txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(250, 27);
+            txtNombre.Size = new Size(250, 34);
             txtNombre.TabIndex = 2;
             // 
             // lblUsuario
             // 
             lblUsuario.AutoSize = true;
             lblUsuario.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblUsuario.Location = new Point(164, 141);
+            lblUsuario.Location = new Point(158, 148);
             lblUsuario.Name = "lblUsuario";
             lblUsuario.Size = new Size(79, 28);
             lblUsuario.TabIndex = 3;
@@ -80,16 +81,17 @@
             // 
             // txtUsuario
             // 
+            txtUsuario.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtUsuario.Location = new Point(286, 142);
             txtUsuario.Name = "txtUsuario";
-            txtUsuario.Size = new Size(250, 27);
+            txtUsuario.Size = new Size(250, 34);
             txtUsuario.TabIndex = 4;
             // 
             // lblContraseña
             // 
             lblContraseña.AutoSize = true;
             lblContraseña.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblContraseña.Location = new Point(164, 204);
+            lblContraseña.Location = new Point(158, 216);
             lblContraseña.Name = "lblContraseña";
             lblContraseña.Size = new Size(110, 28);
             lblContraseña.TabIndex = 5;
@@ -97,9 +99,10 @@
             // 
             // txtContraseña
             // 
-            txtContraseña.Location = new Point(286, 204);
+            txtContraseña.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtContraseña.Location = new Point(286, 213);
             txtContraseña.Name = "txtContraseña";
-            txtContraseña.Size = new Size(250, 27);
+            txtContraseña.Size = new Size(250, 34);
             txtContraseña.TabIndex = 6;
             txtContraseña.UseSystemPasswordChar = true;
             // 
@@ -107,7 +110,7 @@
             // 
             lblRol.AutoSize = true;
             lblRol.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblRol.Location = new Point(164, 272);
+            lblRol.Location = new Point(158, 280);
             lblRol.Name = "lblRol";
             lblRol.Size = new Size(40, 28);
             lblRol.TabIndex = 7;
@@ -116,11 +119,12 @@
             // cbRol
             // 
             cbRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbRol.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbRol.FormattingEnabled = true;
             cbRol.Items.AddRange(new object[] { "admin", "empleado" });
             cbRol.Location = new Point(286, 272);
             cbRol.Name = "cbRol";
-            cbRol.Size = new Size(151, 28);
+            cbRol.Size = new Size(151, 36);
             cbRol.TabIndex = 8;
             // 
             // btnGuardar
