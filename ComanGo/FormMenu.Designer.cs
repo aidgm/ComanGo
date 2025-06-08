@@ -32,9 +32,6 @@
             panelCerrarSesión = new Panel();
             btnCerrarSesion = new Button();
             pbCerrarSesion = new PictureBox();
-            panelHistorial = new Panel();
-            btnHistorial = new Button();
-            pbHistorial = new PictureBox();
             panelEmpleados = new Panel();
             btnEmpleados = new Button();
             pbEmpleados = new PictureBox();
@@ -51,8 +48,6 @@
             panelLateral.SuspendLayout();
             panelCerrarSesión.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbCerrarSesion).BeginInit();
-            panelHistorial.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pbHistorial).BeginInit();
             panelEmpleados.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbEmpleados).BeginInit();
             panelProductos.SuspendLayout();
@@ -66,7 +61,6 @@
             // panelLateral
             // 
             panelLateral.Controls.Add(panelCerrarSesión);
-            panelLateral.Controls.Add(panelHistorial);
             panelLateral.Controls.Add(panelEmpleados);
             panelLateral.Controls.Add(panelProductos);
             panelLateral.Controls.Add(panelComandas);
@@ -83,7 +77,7 @@
             panelCerrarSesión.Controls.Add(btnCerrarSesion);
             panelCerrarSesión.Controls.Add(pbCerrarSesion);
             panelCerrarSesión.Cursor = Cursors.Hand;
-            panelCerrarSesión.Location = new Point(0, 375);
+            panelCerrarSesión.Location = new Point(0, 397);
             panelCerrarSesión.Name = "panelCerrarSesión";
             panelCerrarSesión.Size = new Size(250, 54);
             panelCerrarSesión.TabIndex = 5;
@@ -98,6 +92,7 @@
             btnCerrarSesion.TabIndex = 0;
             btnCerrarSesion.Text = "Cerrar Sesión";
             btnCerrarSesion.UseVisualStyleBackColor = true;
+            btnCerrarSesion.Click += btnCerrarSesion_Click;
             // 
             // pbCerrarSesion
             // 
@@ -109,45 +104,13 @@
             pbCerrarSesion.TabIndex = 0;
             pbCerrarSesion.TabStop = false;
             // 
-            // panelHistorial
-            // 
-            panelHistorial.AutoSize = true;
-            panelHistorial.Controls.Add(btnHistorial);
-            panelHistorial.Controls.Add(pbHistorial);
-            panelHistorial.Cursor = Cursors.Hand;
-            panelHistorial.Location = new Point(0, 300);
-            panelHistorial.Name = "panelHistorial";
-            panelHistorial.Size = new Size(250, 54);
-            panelHistorial.TabIndex = 4;
-            // 
-            // btnHistorial
-            // 
-            btnHistorial.AutoSize = true;
-            btnHistorial.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnHistorial.Location = new Point(50, 13);
-            btnHistorial.Name = "btnHistorial";
-            btnHistorial.Size = new Size(140, 38);
-            btnHistorial.TabIndex = 0;
-            btnHistorial.Text = "Historial";
-            btnHistorial.UseVisualStyleBackColor = true;
-            // 
-            // pbHistorial
-            // 
-            pbHistorial.Image = Properties.Resources.documents;
-            pbHistorial.Location = new Point(10, 14);
-            pbHistorial.Name = "pbHistorial";
-            pbHistorial.Size = new Size(32, 32);
-            pbHistorial.SizeMode = PictureBoxSizeMode.Zoom;
-            pbHistorial.TabIndex = 0;
-            pbHistorial.TabStop = false;
-            // 
             // panelEmpleados
             // 
             panelEmpleados.AutoSize = true;
             panelEmpleados.Controls.Add(btnEmpleados);
             panelEmpleados.Controls.Add(pbEmpleados);
             panelEmpleados.Cursor = Cursors.Hand;
-            panelEmpleados.Location = new Point(0, 225);
+            panelEmpleados.Location = new Point(0, 303);
             panelEmpleados.Name = "panelEmpleados";
             panelEmpleados.Size = new Size(250, 54);
             panelEmpleados.TabIndex = 3;
@@ -180,7 +143,7 @@
             panelProductos.Controls.Add(btnProductos);
             panelProductos.Controls.Add(pbProductos);
             panelProductos.Cursor = Cursors.Hand;
-            panelProductos.Location = new Point(0, 150);
+            panelProductos.Location = new Point(0, 212);
             panelProductos.Name = "panelProductos";
             panelProductos.Size = new Size(250, 54);
             panelProductos.TabIndex = 2;
@@ -195,6 +158,7 @@
             btnProductos.TabIndex = 0;
             btnProductos.Text = "Productos";
             btnProductos.UseVisualStyleBackColor = true;
+            btnProductos.Click += btnProductos_Click;
             // 
             // pbProductos
             // 
@@ -212,7 +176,7 @@
             panelComandas.Controls.Add(btnComandas);
             panelComandas.Controls.Add(pictureBox1);
             panelComandas.Cursor = Cursors.Hand;
-            panelComandas.Location = new Point(0, 80);
+            panelComandas.Location = new Point(0, 127);
             panelComandas.Name = "panelComandas";
             panelComandas.Size = new Size(250, 54);
             panelComandas.TabIndex = 1;
@@ -245,7 +209,7 @@
             panelMesas.Controls.Add(btnMesas);
             panelMesas.Controls.Add(pbMesas);
             panelMesas.Cursor = Cursors.Hand;
-            panelMesas.Location = new Point(0, 10);
+            panelMesas.Location = new Point(0, 39);
             panelMesas.Name = "panelMesas";
             panelMesas.Size = new Size(250, 54);
             panelMesas.TabIndex = 0;
@@ -299,9 +263,6 @@
             panelCerrarSesión.ResumeLayout(false);
             panelCerrarSesión.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pbCerrarSesion).EndInit();
-            panelHistorial.ResumeLayout(false);
-            panelHistorial.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pbHistorial).EndInit();
             panelEmpleados.ResumeLayout(false);
             panelEmpleados.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pbEmpleados).EndInit();
@@ -327,9 +288,6 @@
         private Panel panelComandas;
         private Button btnComandas;
         private PictureBox pictureBox1;
-        private Panel panelHistorial;
-        private Button btnHistorial;
-        private PictureBox pbHistorial;
         private Panel panelEmpleados;
         private Button btnEmpleados;
         private PictureBox pbEmpleados;

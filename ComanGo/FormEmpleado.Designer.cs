@@ -43,10 +43,10 @@
             // 
             // lblTitulo
             // 
-            lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(295, 9);
+            lblTitulo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTitulo.Location = new Point(286, 9);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(135, 20);
+            lblTitulo.Size = new Size(188, 47);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "Agregar Empleado";
             lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
@@ -54,15 +54,16 @@
             // lblNombre
             // 
             lblNombre.AutoSize = true;
+            lblNombre.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblNombre.Location = new Point(164, 74);
             lblNombre.Name = "lblNombre";
-            lblNombre.Size = new Size(64, 20);
+            lblNombre.Size = new Size(85, 28);
             lblNombre.TabIndex = 1;
             lblNombre.Text = "Nombre";
             // 
             // txtNombre
             // 
-            txtNombre.Location = new Point(295, 71);
+            txtNombre.Location = new Point(286, 75);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(250, 27);
             txtNombre.TabIndex = 2;
@@ -70,15 +71,16 @@
             // lblUsuario
             // 
             lblUsuario.AutoSize = true;
-            lblUsuario.Location = new Point(164, 138);
+            lblUsuario.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblUsuario.Location = new Point(164, 141);
             lblUsuario.Name = "lblUsuario";
-            lblUsuario.Size = new Size(59, 20);
+            lblUsuario.Size = new Size(79, 28);
             lblUsuario.TabIndex = 3;
             lblUsuario.Text = "Usuario";
             // 
             // txtUsuario
             // 
-            txtUsuario.Location = new Point(295, 135);
+            txtUsuario.Location = new Point(286, 142);
             txtUsuario.Name = "txtUsuario";
             txtUsuario.Size = new Size(250, 27);
             txtUsuario.TabIndex = 4;
@@ -86,15 +88,16 @@
             // lblContraseña
             // 
             lblContraseña.AutoSize = true;
-            lblContraseña.Location = new Point(164, 200);
+            lblContraseña.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblContraseña.Location = new Point(164, 204);
             lblContraseña.Name = "lblContraseña";
-            lblContraseña.Size = new Size(83, 20);
+            lblContraseña.Size = new Size(110, 28);
             lblContraseña.TabIndex = 5;
             lblContraseña.Text = "Contraseña";
             // 
             // txtContraseña
             // 
-            txtContraseña.Location = new Point(295, 197);
+            txtContraseña.Location = new Point(286, 204);
             txtContraseña.Name = "txtContraseña";
             txtContraseña.Size = new Size(250, 27);
             txtContraseña.TabIndex = 6;
@@ -103,9 +106,10 @@
             // lblRol
             // 
             lblRol.AutoSize = true;
-            lblRol.Location = new Point(164, 259);
+            lblRol.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblRol.Location = new Point(164, 272);
             lblRol.Name = "lblRol";
-            lblRol.Size = new Size(31, 20);
+            lblRol.Size = new Size(40, 28);
             lblRol.TabIndex = 7;
             lblRol.Text = "Rol";
             // 
@@ -114,37 +118,43 @@
             cbRol.DropDownStyle = ComboBoxStyle.DropDownList;
             cbRol.FormattingEnabled = true;
             cbRol.Items.AddRange(new object[] { "admin", "empleado" });
-            cbRol.Location = new Point(295, 256);
+            cbRol.Location = new Point(286, 272);
             cbRol.Name = "cbRol";
             cbRol.Size = new Size(151, 28);
             cbRol.TabIndex = 8;
             // 
             // btnGuardar
             // 
+            btnGuardar.BackColor = Color.ForestGreen;
             btnGuardar.DialogResult = DialogResult.OK;
-            btnGuardar.Location = new Point(164, 336);
+            btnGuardar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnGuardar.ForeColor = Color.Yellow;
+            btnGuardar.Location = new Point(164, 346);
             btnGuardar.Name = "btnGuardar";
-            btnGuardar.Size = new Size(94, 29);
+            btnGuardar.Size = new Size(144, 60);
             btnGuardar.TabIndex = 9;
             btnGuardar.Text = "Guardar";
-            btnGuardar.UseVisualStyleBackColor = true;
+            btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click;
             // 
             // btnCancelar
             // 
+            btnCancelar.BackColor = Color.ForestGreen;
             btnCancelar.DialogResult = DialogResult.Cancel;
-            btnCancelar.Location = new Point(380, 336);
+            btnCancelar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnCancelar.ForeColor = Color.Yellow;
+            btnCancelar.Location = new Point(406, 346);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(94, 29);
+            btnCancelar.Size = new Size(130, 60);
             btnCancelar.TabIndex = 10;
             btnCancelar.Text = "Cancelar";
-            btnCancelar.UseVisualStyleBackColor = true;
+            btnCancelar.UseVisualStyleBackColor = false;
             // 
             // FormEmpleado
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.LightYellow;
+            BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(782, 453);
             Controls.Add(btnCancelar);
             Controls.Add(btnGuardar);

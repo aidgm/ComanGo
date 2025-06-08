@@ -29,6 +29,7 @@ namespace ComanGo
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             pbLogo = new PictureBox();
             label1 = new Label();
             panelUsuario = new Panel();
@@ -39,6 +40,7 @@ namespace ComanGo
             pbContraseña = new PictureBox();
             lblError = new Label();
             btnLogin = new Button();
+            timerError = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)pbLogo).BeginInit();
             panelUsuario.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbIconUsuario).BeginInit();
@@ -135,22 +137,30 @@ namespace ComanGo
             lblError.AutoSize = true;
             lblError.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblError.ForeColor = Color.Red;
-            lblError.Location = new Point(320, 472);
+            lblError.Location = new Point(334, 490);
             lblError.Name = "lblError";
             lblError.Size = new Size(0, 28);
             lblError.TabIndex = 5;
-            lblError.TextAlign = ContentAlignment.BottomCenter;
+            lblError.TextAlign = ContentAlignment.MiddleCenter;
             lblError.Visible = false;
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(420, 408);
+            btnLogin.BackColor = Color.ForestGreen;
+            btnLogin.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnLogin.ForeColor = Color.Yellow;
+            btnLogin.Location = new Point(388, 399);
             btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(144, 52);
+            btnLogin.Size = new Size(184, 75);
             btnLogin.TabIndex = 6;
             btnLogin.Text = "Inicio Sesión";
-            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.UseVisualStyleBackColor = false;
             btnLogin.Click += btnLogin_Click;
+            // 
+            // timerError
+            // 
+            timerError.Interval = 3000;
+            timerError.Tick += timerError_Tick;
             // 
             // FormLogin
             // 
@@ -169,6 +179,7 @@ namespace ComanGo
             Name = "FormLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ComanGo";
+            Load += FormLogin_Load_1;
             ((System.ComponentModel.ISupportInitialize)pbLogo).EndInit();
             panelUsuario.ResumeLayout(false);
             panelUsuario.PerformLayout();
@@ -194,5 +205,6 @@ namespace ComanGo
         private PictureBox pbContraseña;
         private Label lblError;
         private Button btnLogin;
+        private System.Windows.Forms.Timer timerError;
     }
 }

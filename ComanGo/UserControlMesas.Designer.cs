@@ -30,6 +30,8 @@
         {
             btnAgregarMesa = new Button();
             panelMesas = new FlowLayoutPanel();
+            btnEliminar = new Button();
+            panelMesas.SuspendLayout();
             SuspendLayout();
             // 
             // btnAgregarMesa
@@ -46,12 +48,23 @@
             // panelMesas
             // 
             panelMesas.AutoScroll = true;
+            panelMesas.Controls.Add(btnEliminar);
             panelMesas.Dock = DockStyle.Fill;
             panelMesas.Location = new Point(0, 40);
             panelMesas.Name = "panelMesas";
             panelMesas.Padding = new Padding(10);
             panelMesas.Size = new Size(800, 460);
             panelMesas.TabIndex = 1;
+            // 
+            // btnEliminar
+            // 
+            btnEliminar.Location = new Point(13, 13);
+            btnEliminar.Name = "btnEliminar";
+            btnEliminar.Size = new Size(800, 40);
+            btnEliminar.TabIndex = 0;
+            btnEliminar.Text = "Eliminar";
+            btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.Click += btnEliminar_Click;
             // 
             // UserControlMesas
             // 
@@ -61,6 +74,7 @@
             Controls.Add(btnAgregarMesa);
             Name = "UserControlMesas";
             Size = new Size(800, 500);
+            panelMesas.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -68,5 +82,6 @@
 
         private Button btnAgregarMesa;
         private FlowLayoutPanel panelMesas;
+        private Button btnEliminar;
     }
 }

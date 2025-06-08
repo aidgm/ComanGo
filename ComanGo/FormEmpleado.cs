@@ -18,7 +18,10 @@ namespace ComanGo
         public FormEmpleado()
         {
             InitializeComponent();
-            cbRol.Items.AddRange(new string[] { "admin", "empleado" });
+            if (cbRol.Items.Count == 0) //  evita duplicados
+            {
+                cbRol.Items.AddRange(new string[] { "admin", "empleado" });
+            }
             cbRol.SelectedIndex = 1; // "empleado" por defecto
             lblTitulo.Text = "Agregar Empleado";
         }

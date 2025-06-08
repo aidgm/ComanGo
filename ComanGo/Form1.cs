@@ -13,8 +13,11 @@ namespace ComanGo
         public FormLogin()
         {
             InitializeComponent();
+            this.FormClosed += (s, args) => Application.Exit();
             CargarConfProbarCon();
             lblError.Visible = false;
+            timerError.Tick += timerError_Tick;
+
         }
 
         private void CargarConfProbarCon()
@@ -27,7 +30,6 @@ namespace ComanGo
                 {
                     conn.Open();
 
-                    MessageBox.Show("Conexión exitosa al servidor MySQL.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // Verificar si la base de datos existe
                     string checkDbQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ComanGoDB'";
@@ -91,10 +93,10 @@ namespace ComanGo
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-            
+
 
         }
-        
+
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -129,9 +131,11 @@ namespace ComanGo
                         Conexion.UsuarioActual = reader["Usuario"].ToString(); // Guarda el usuario
                         Conexion.RolUsuarioActual = reader["Rol"].ToString();  // Guarda el rol
 
-                        FormMenu menu = new FormMenu(idEmpleado);
-                        menu.Show();
                         this.Hide();
+                        FormMenu menu = new FormMenu(idEmpleado);
+                        menu.FormClosed += (s, args) => this.Show();  //  Al cerrar el menú, vuelve el login
+                        menu.Show();
+
                     }
 
 
@@ -140,6 +144,8 @@ namespace ComanGo
                 {
                     lblError.Text = "Usuario o contraseña incorrectos.";
                     lblError.Visible = true;
+                    timerError.Start();
+
                 }
             }
             catch (Exception ex)
@@ -149,5 +155,15 @@ namespace ComanGo
 
         }
 
+        private void FormLogin_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timerError_Tick(object sender, EventArgs e)
+        {
+            lblError.Visible = false;
+            timerError.Stop();
+        }
     }
 }

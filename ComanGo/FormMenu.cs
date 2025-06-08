@@ -53,5 +53,33 @@ namespace ComanGo
             bool esAdmin = Conexion.RolUsuarioActual == "admin";
             CargarEnPanel(new UserControlEmpleados(esAdmin));
         }
+
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+
+
+            this.Close();
+
+        }
+        public void CargarUserControl(UserControl control)
+        {
+            panelContenido.Controls.Clear();
+            control.Dock = DockStyle.Fill;
+            panelContenido.Controls.Add(control);
+        }
+
+
+        internal void CargarUserControl(UserControlComanda ucComanda)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnProductos_Click(object sender, EventArgs e)
+        {
+            panelContenido.Controls.Clear();
+            var productos = new UserControlProducto();
+            productos.Dock = DockStyle.Fill;
+            panelContenido.Controls.Add(productos);
+        }
     }
 }
