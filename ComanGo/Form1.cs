@@ -1,108 +1,94 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.IO;
 using System.Windows.Forms;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
 
 namespace ComanGo
 {
     public partial class FormLogin : Form
     {
-        private string connectionString;
         public FormLogin()
         {
             InitializeComponent();
-            this.FormClosed += (s, args) => Application.Exit();
-            CargarConfProbarCon();
+            this.FormClosed += (s, args) => Application.Exit(); //se cierra la app si se cierra la ventana de inicio(login)
+            VerificarCrearBD();
             lblError.Visible = false;
             timerError.Tick += timerError_Tick;
 
         }
 
-        private void CargarConfProbarCon()
+        // Método para comprobar si existe la BD, si no crearla con las correspondientes tablas
+        private void VerificarCrearBD()
         {
             try
             {
-                // 1. Conexión sin base de datos, solo para verificar si ComanGo existe
-                string serverConnection = "Server=127.0.0.1;Port=3307;User Id=root;Password=abc123.;";
-                using (var conn = new MySqlConnection(serverConnection))
+                // Conexión sin base de datos, solo para verificar si ComanGo existe
+                string sinBD = Conexion.ConnectionString.Replace("Database=ComanGoBD;", "");
+
+                using (var conn = new MySqlConnection(sinBD))
                 {
                     conn.Open();
 
 
-                    // Verificar si la base de datos existe
-                    string checkDbQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ComanGoDB'";
-                    using (var cmd = new MySqlCommand(checkDbQuery, conn))
+                    // Verificar si ya está creada
+                    var cmdCheck = new MySqlCommand("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ComanGoBD'", conn);
+                    object exist = cmdCheck.ExecuteScalar();
+
+                    //Si no existe, se crea
+                    if (exist == null)
                     {
-                        object existe = cmd.ExecuteScalar();
-                        if (existe == null)
-                        {
-                            string createDbQuery = "CREATE DATABASE ComanGo;";
-                            new MySqlCommand(createDbQuery, conn).ExecuteNonQuery();
-                            MessageBox.Show("Base de datos 'ComanGo' creada correctamente.");
-                        }
+                        new MySqlCommand("CREATE DATABASE ComanGoBD;", conn).ExecuteNonQuery();
+                        MessageBox.Show("Base de datos creada correctamente");
                     }
+
                 }
 
-                // 2. Guardar la cadena de conexión global con base de datos incluida
-                Conexion.ConnectionString = "Server=127.0.0.1;Port=3307;Database=ComanGoDB;User Id=root;Password=abc123.;";
-
-                // 3. Conectarse a la base de datos para verificar y crear tablas
+                // Conectar con la BD una vez creada
                 using (var conn = new MySqlConnection(Conexion.ConnectionString))
                 {
                     conn.Open();
 
-                    string checkTables = "SHOW TABLES;";
-                    using (var cmd = new MySqlCommand(checkTables, conn))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows) return;
-                    }
+                    //Si ya hay tablas no se hace nada
+                    var cmdTablas = new MySqlCommand("SHOW TABLES;", conn);
+                    var reader = cmdTablas.ExecuteReader();
+                    if (reader.HasRows) return;
+                    reader.Close();
 
-                    string sqlPath = Path.Combine(Application.StartupPath, "ComanGOBD.sql");
-                    if (!File.Exists(sqlPath))
+                    //Ejecutar el script si no hay tablas (1ºconexión de la aplicación)
+                    string pathSql = Path.Combine(Application.StartupPath, "ComanGoBD.sql");
+                    if (!File.Exists(pathSql))
                     {
-                        MessageBox.Show("No se encontró el archivo ComanGOBD.sql.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Falta el archivo ComanGoBD.sql");
                         return;
                     }
 
-                    string[] comandos = File.ReadAllText(sqlPath).Split(';');
-                    foreach (string sql in comandos)
+                    string[] sentencias = File.ReadAllText(pathSql).Split(';');
+                    foreach (string sql in sentencias)
                     {
-                        string cleanSql = sql.Trim();
-                        if (!string.IsNullOrEmpty(cleanSql))
+                        string limpio = sql.Trim();
+                        if (!string.IsNullOrEmpty(limpio))
                         {
-                            using var sqlCmd = new MySqlCommand(cleanSql, conn);
-                            sqlCmd.ExecuteNonQuery();
+                            new MySqlCommand(limpio, conn).ExecuteNonQuery();
                         }
                     }
 
-                    MessageBox.Show("Tablas creadas correctamente desde el script SQL.");
+                    MessageBox.Show("Tablas creadas correctamente");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show($" Error al conectar a la base de datos:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al conectarse o crear la BD:\n" + e.Message);
             }
         }
 
-
-
-
-
-        private void FormLogin_Load(object sender, EventArgs e)
-        {
-
-
-        }
-
-
+        //Botón de login
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string usuario = txtUsuario.Text.Trim();
             string contrasena = txtContraseña.Text.Trim();
 
+            //Validación 
             if (usuario == "" || contrasena == "")
             {
                 lblError.Text = "Por favor, completa todos los campos.";
@@ -115,44 +101,35 @@ namespace ComanGo
                 using var conn = new MySqlConnection(Conexion.ConnectionString);
                 conn.Open();
 
-                string sql = "SELECT * FROM Empleados WHERE Usuario = @usuario AND Contrasena = @contrasena";
-                using var cmd = new MySqlCommand(sql, conn);
+                var cmd = new MySqlCommand("SELECT * FROM Empleados WHERE Usuario = @usuario AND Contrasena = @contrasena", conn);
                 cmd.Parameters.AddWithValue("@usuario", usuario);
                 cmd.Parameters.AddWithValue("@contrasena", contrasena);
 
-                using var reader = cmd.ExecuteReader();
-                if (reader.HasRows)
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows && reader.Read())
                 {
-                    int idEmpleado = 0;
+                    //Guardar los datos de usuario
+                    Conexion.UsuarioActual = reader["Usuario"].ToString();
+                    Conexion.RolUsuarioActual = reader["Rol"].ToString();
+                    int idEmpeado = Convert.ToInt32(reader["IdEmpleado"]);
 
-                    if (reader.Read())
-                    {
-                        idEmpleado = Convert.ToInt32(reader["IdEmpleado"]);
-                        Conexion.UsuarioActual = reader["Usuario"].ToString(); // Guarda el usuario
-                        Conexion.RolUsuarioActual = reader["Rol"].ToString();  // Guarda el rol
-
-                        this.Hide();
-                        FormMenu menu = new FormMenu(idEmpleado);
-                        menu.FormClosed += (s, args) => this.Show();  //  Al cerrar el menú, vuelve el login
-                        menu.Show();
-
-                    }
-
-
+                    this.Hide();
+                    var menu = new FormMenu(idEmpeado);
+                    menu.FormClosed += (s, arga) => this.Show(); //vuelta al login después de cerrar el FormMenu
+                    menu.Show();
                 }
                 else
                 {
+                    //Nueva validación por si no existe o está mal escrito
                     lblError.Text = "Usuario o contraseña incorrectos.";
                     lblError.Visible = true;
                     timerError.Start();
-
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al intentar iniciar sesión:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al iniciar sesión:\n" + ex.Message);
             }
-
         }
 
         private void FormLogin_Load_1(object sender, EventArgs e)
@@ -160,6 +137,7 @@ namespace ComanGo
 
         }
 
+        // Temporizador para ocultar el label de error 
         private void timerError_Tick(object sender, EventArgs e)
         {
             lblError.Visible = false;

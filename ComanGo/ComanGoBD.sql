@@ -1,11 +1,10 @@
 
-DROP DATABASE IF EXISTS ComanGoDB;
-CREATE DATABASE ComanGoDB;
-USE ComanGoDB;
+DROP DATABASE IF EXISTS ComanGoBD;
+CREATE DATABASE ComanGoBD;
+USE ComanGoBD;
 
+-- TABLAS
 
-
--- Tabla de empleados
 CREATE TABLE IF NOT EXISTS Empleados (
     IdEmpleado INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(50),
@@ -15,20 +14,19 @@ CREATE TABLE IF NOT EXISTS Empleados (
 
 );
 
--- Tabla de productos
 CREATE TABLE IF NOT EXISTS Productos (
     IdProducto INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(50) UNIQUE,
     Precio DECIMAL(10, 2)
 );
 
--- Tabla de mesas
+
 CREATE TABLE IF NOT EXISTS Mesas (
     IdMesa INT AUTO_INCREMENT PRIMARY KEY,
     NombreMesa VARCHAR(20)
 );
 
--- Tabla de comandas
+
 CREATE TABLE IF NOT EXISTS Comandas (
     IdComanda INT AUTO_INCREMENT PRIMARY KEY,
     IdEmpleado INT,
@@ -39,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Comandas (
     FOREIGN KEY (IdMesa) REFERENCES Mesas(IdMesa)
 );
 
--- Tabla detalle de comandas
+
 CREATE TABLE IF NOT EXISTS DetalleComanda (
     IdDetalle INT AUTO_INCREMENT PRIMARY KEY,
     IdComanda INT,
@@ -49,12 +47,14 @@ CREATE TABLE IF NOT EXISTS DetalleComanda (
     FOREIGN KEY (IdProducto) REFERENCES Productos(IdProducto)
 );
 
--- Insertar empleados de ejemplo
+
+-- PRUEBA CON DATOS
+
 INSERT INTO Empleados (Nombre, Usuario, Contrasena, Rol) VALUES
 ('Ana García', 'ana', '1234', 'admin'),
 ('Carlos López', 'carlos', 'abcd', 'empleado');
 
--- Insertar productos de ejemplo
+
 INSERT INTO Productos (Nombre, Precio) VALUES
 ('Café', 1.50),
 ('Tostada', 2.00),
@@ -64,10 +64,10 @@ INSERT INTO Productos (Nombre, Precio) VALUES
 ('Agua', 1.00),
 ('Refresco', 1.80);
 
--- Insertar mesas de ejemplo
+
 INSERT INTO Mesas (NombreMesa) VALUES
 ('Mesa 1'),
 ('Mesa 2'),
 ('Mesa 3'),
-('Barra 1'),
-('Barra 2');
+('Mesa 4'),
+('Mesa 5');
