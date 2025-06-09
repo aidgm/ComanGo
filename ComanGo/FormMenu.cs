@@ -12,31 +12,25 @@ namespace ComanGo
 {
     public partial class FormMenu : Form
     {
-        private int idEmpleadoActual;
+        private int idEmpleadoActual; //id del empleado que inicia sesión
 
+        //constructor donde se guarda el id y se carga el diseño del form
         public FormMenu(int idEmpleado)
         {
             InitializeComponent();
             this.idEmpleadoActual = idEmpleado;
         }
-        public FormMenu(Point posicionFormulario)
-        {
-            InitializeComponent();
-            this.StartPosition = FormStartPosition.Manual;
-            this.Location = posicionFormulario;
-        }
-
+        
+        //Aquí cargan todos los UserControl 
         public void CargarEnPanel(Control control)
         {
             panelContenido.Controls.Clear();      // Limpia lo que haya antes
             control.Dock = DockStyle.Fill;        // Ocupa todo el panel
             panelContenido.Controls.Add(control); // Añade el nuevo UserControl
         }
-        private void FormMenu_Load(object sender, EventArgs e)
-        {
 
-        }
 
+        //Botones
         private void btnMesas_Click(object sender, EventArgs e)
         {
             CargarEnPanel(new UserControlMesas(idEmpleadoActual));
@@ -47,39 +41,21 @@ namespace ComanGo
             CargarEnPanel(new UserControlHistorialComandacs());
 
         }
-
+        private void btnProductos_Click(object sender, EventArgs e)
+        {
+            CargarEnPanel(new UserControlProducto());
+        }
         private void btnEmpleados_Click(object sender, EventArgs e)
         {
-            bool esAdmin = Conexion.RolUsuarioActual == "admin";
+            bool esAdmin = Conexion.RolUsuarioActual == "admin"; //comprobar si es admin para acceder a permisos (eliminar empleados)
             CargarEnPanel(new UserControlEmpleados(esAdmin));
         }
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-
-
             this.Close();
-
-        }
-        public void CargarUserControl(UserControl control)
-        {
-            panelContenido.Controls.Clear();
-            control.Dock = DockStyle.Fill;
-            panelContenido.Controls.Add(control);
         }
 
-
-        internal void CargarUserControl(UserControlComanda ucComanda)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void btnProductos_Click(object sender, EventArgs e)
-        {
-            panelContenido.Controls.Clear();
-            var productos = new UserControlProducto();
-            productos.Dock = DockStyle.Fill;
-            panelContenido.Controls.Add(productos);
-        }
+        
     }
 }

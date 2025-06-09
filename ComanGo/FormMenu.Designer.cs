@@ -257,7 +257,7 @@
             Name = "FormMenu";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ComanGo";
-            Load += FormMenu_Load;
+            
             panelLateral.ResumeLayout(false);
             panelLateral.PerformLayout();
             panelCerrarSesión.ResumeLayout(false);
