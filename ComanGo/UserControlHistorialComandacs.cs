@@ -18,8 +18,10 @@ namespace ComanGo
             InitializeComponent();
             CargarComandas();
 
+            //eventos del propio DataGrid para controlar esos cambios
             dgvComandas.CellContentClick += dgvComandas_CellContentClick;
             dgvComandas.CellValueChanged += dgvComandas_CellValueChanged;
+            //guardar al momento 
             dgvComandas.CurrentCellDirtyStateChanged += (s, e) =>
             {
                 if (dgvComandas.IsCurrentCellDirty)
@@ -27,6 +29,12 @@ namespace ComanGo
             };
 
         }
+
+        /// <summary>
+        /// Este método se activa cuando se cambia el valor del estado
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvComandas_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvComandas.Columns[e.ColumnIndex].Name == "Estado")
@@ -44,6 +52,11 @@ namespace ComanGo
             }
         }
 
+        /// <summary>
+        /// Evento el cual al hacer doble clic en una fila se abre la comanda para editar si está abierta
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvComandas_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -59,14 +72,21 @@ namespace ComanGo
                 string nombreMesa = dgvComandas.Rows[e.RowIndex].Cells["NombreMesa"].Value.ToString();
                 int idEmpleado = Conexion.IdUsuarioActual;
 
-                // Necesitamos también el IdMesa
-                int idMesa = ObtenerIdMesaDesdeNombre(nombreMesa); // lo añades abajo
+                
+                int idMesa = ObtenerIdMesaDesdeNombre(nombreMesa); //buscar idmesa a partir del nombre
+
+                //abrir useControlComanda para abrir la comanda
                 var comanda = new UserControlComanda(nombreMesa, idMesa, idEmpleado, idComanda, modoEdicion: true);
                 ((FormMenu)this.ParentForm).CargarEnPanel(comanda);
 
             }
         }
 
+        /// <summary>
+        /// devuelve el id de la mesa a partir del nombre cuando se está modificando
+        /// </summary>
+        /// <param name="nombreMesa"></param>
+        /// <returns></returns>
         private int ObtenerIdMesaDesdeNombre(string nombreMesa)
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -79,9 +99,9 @@ namespace ComanGo
             return result != null ? Convert.ToInt32(result) : 0;
         }
 
-
-
-
+        /// <summary>
+        /// cargar todas las comandas
+        /// </summary>
         private void CargarComandas()
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -99,31 +119,32 @@ namespace ComanGo
             adapter.Fill(dt);
             dgvComandas.DataSource = dt;
 
+            //pasar a un comboBox la columna de estado
             if (dgvComandas.Columns.Contains("Estado"))
             {
-                // Guardar el índice de la columna actual Estado
                 int index = dgvComandas.Columns["Estado"].Index;
                 dgvComandas.Columns.Remove("Estado");
 
-                // Crear ComboBoxColumn
+                // Crear ComboBox
                 var combo = new DataGridViewComboBoxColumn();
                 combo.HeaderText = "Estado";
                 combo.Name = "Estado";
                 combo.DataPropertyName = "Estado";
                 combo.DataSource = new string[] { "Abierta", "Finalizada" };
 
-                // Reemplazar columna
-
                 dgvComandas.Columns.Insert(index, combo);
             }
 
+            //conectar eventos 
             dgvComandas.CellValueChanged += dgvComandas_CellValueChanged;
             dgvComandas.CellDoubleClick += dgvComandas_CellDoubleClick;
-
-
-
         }
 
+        /// <summary>
+        /// Al clicar en una celda se muestra la comanda desglosada en el DataGrid de abajo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvComandas_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -133,6 +154,10 @@ namespace ComanGo
             }
         }
 
+        /// <summary>
+        /// Mostrar los productos de la comanda en el DataGrid de abajo
+        /// </summary>
+        /// <param name="idComanda"></param>
         private void MostrarDetalleComanda(int idComanda)
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -151,11 +176,6 @@ namespace ComanGo
             var dt = new DataTable();
             adapter.Fill(dt);
             dgvDetalle.DataSource = dt;
-        }
-
-        private void lblHistorial_Click(object sender, EventArgs e)
-        {
-
-        }
+        }        
     }
 }

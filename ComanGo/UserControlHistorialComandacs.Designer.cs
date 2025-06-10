@@ -101,7 +101,7 @@
             lblHistorial.Size = new Size(206, 28);
             lblHistorial.TabIndex = 2;
             lblHistorial.Text = "Historial de comandas";
-            lblHistorial.Click += lblHistorial_Click;
+            
             // 
             // UserControlHistorialComandacs
             // 

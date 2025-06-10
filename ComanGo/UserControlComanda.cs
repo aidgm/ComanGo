@@ -13,22 +13,24 @@ namespace ComanGo
 {
     public partial class UserControlComanda : UserControl
     {
+        // info de quién hace la comanda y de la mesa
         private string nombreMesa;
-        private decimal total = 0;
-
-        private int idEmpleadoActual = 1; // Reemplaza con valor real si puedes pasarlo
-        private int idMesaActual = 0;
-        private int idComandaActual = 0;
+        private int idMesaActual;
+        private int idEmpleadoActual;
+        private int idComandaActual;
         private bool modoEdicion;
 
+        private decimal total = 0;
+
+        //
+
+        //lista para productos que ya están
         private List<(int idProducto, string nombre, int cantidad, decimal precio)> productosExistentes = new();
-        private List<(int idProducto, string nombre, int cantidad, decimal precio)> nuevosProductos = new();
+        //lista para los nuevos productos que se añaden
+        private List<(int idProducto, string nombre, int cantidad, decimal precio)> productosNuevos = new();
 
-        private Dictionary<string, (int idProducto, decimal precio)> productosDisponibles = new();
-
-       
-
-        public UserControlComanda(string nombreMesa, int idMesa, int idEmpleado, int idComanda=0, bool modoEdicion = false)
+        //constructor
+        public UserControlComanda(string nombreMesa, int idMesa, int idEmpleado, int idComanda = 0, bool modoEdicion = false)
         {
             InitializeComponent();
 
@@ -37,24 +39,28 @@ namespace ComanGo
             this.idEmpleadoActual = idEmpleado;
             this.modoEdicion = modoEdicion;
             this.idComandaActual = idComanda;
+
             lblTitulo.Text = $"Comanda - {nombreMesa}";
-
-            CargarProductosDesdeBD();
-
             lblTotal.Text = "Total: 0.00 €";
+
+            //método para cargar los productos en el selector(comboBox)
+            CargarProductosDesdeBD();
 
             if (modoEdicion)
             {
-                CargarComandaExistente(); // ya debe existir en la base de datos
-
+                //si estamos editando, cargar comanda
+                CargarComandaExistente();
             }
             else
             {
-                CrearNuevaComanda(); // este genera un nuevo ID
+                //si es nueva, se crea la comanda
+                CrearNuevaComanda();
             }
-                
         }
 
+        /// <summary>
+        /// Método para rellenar el comboBox con los productos que hay en la BD
+        /// </summary>
         private void CargarProductosDesdeBD()
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -69,13 +75,16 @@ namespace ComanGo
                 int id = reader.GetInt32("IdProducto");
                 string nombre = reader.GetString("Nombre");
                 decimal precio = reader.GetDecimal("Precio");
-
                 items.Add((id, nombre, precio));
             }
 
             cbProductos.DataSource = items;
             cbProductos.DisplayMember = "Nombre";
         }
+
+        /// <summary>
+        /// Si se está modificando la comanda una vez creada se cargan los productos nuevos de la comanda
+        /// </summary>
         private void CargarComandaExistente()
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -90,6 +99,10 @@ namespace ComanGo
             cmd.Parameters.AddWithValue("@id", idComandaActual);
             var reader = cmd.ExecuteReader();
 
+            productosExistentes.Clear();
+            lstProductos.Items.Clear();
+            total = 0;
+
             while (reader.Read())
             {
                 int idProducto = reader.GetInt32("IdProducto");
@@ -99,7 +112,6 @@ namespace ComanGo
                 decimal subtotal = cantidad * precio;
 
                 lstProductos.Items.Add($"{nombre} x{cantidad} - {subtotal:0.00} €");
-
                 productosExistentes.Add((idProducto, nombre, cantidad, precio));
                 total += subtotal;
             }
@@ -108,7 +120,9 @@ namespace ComanGo
         }
 
 
-
+        /// <summary>
+        /// Crear una comanda nueva
+        /// </summary>
         private void CrearNuevaComanda()
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -123,11 +137,31 @@ namespace ComanGo
             idComandaActual = Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        private void UserControlComanda_Load(object sender, EventArgs e)
+        /// <summary>
+        /// Después de agregar o eliminar se actualiza la lista de productos
+        /// </summary>
+        private void ActualizarListaProductos()
         {
+            lstProductos.Items.Clear();
 
+            foreach (var p in productosExistentes)
+            {
+                decimal subtotal = p.precio * p.cantidad;
+                lstProductos.Items.Add($"{p.nombre} x{p.cantidad} - {subtotal:0.00} €");
+            }
+
+            foreach (var p in productosNuevos)
+            {
+                decimal subtotal = p.precio * p.cantidad;
+                lstProductos.Items.Add($"{p.nombre} x{p.cantidad} - {subtotal:0.00} €");
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAgregarProducto_Click(object sender, EventArgs e)
         {
             if (cbProductos.SelectedItem is not ValueTuple<int, string, decimal> seleccionado)
@@ -138,34 +172,51 @@ namespace ComanGo
 
             int idProducto = seleccionado.Item1;
             string nombreProducto = seleccionado.Item2;
-            decimal precioUnitario = seleccionado.Item3;
-            int cantidad = (int)nudCantidad.Value;
+            decimal precio = seleccionado.Item3;
+            int cantidadNueva = (int)nudCantidad.Value;
 
-            // Verificar duplicados
-            if (productosExistentes.Any(p => p.idProducto == idProducto) ||
-                nuevosProductos.Any(p => p.idProducto == idProducto))
+            
+
+            //Comprobar si ya estaba ese producto en la comanda
+            var existente = productosExistentes.FirstOrDefault(p => p.idProducto == idProducto);
+            if (existente != default)
             {
-                MessageBox.Show("Este producto ya ha sido agregado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                productosExistentes.Remove(existente);
+                productosExistentes.Add((idProducto, nombreProducto, existente.cantidad + cantidadNueva, precio));
+            }
+            else
+            {
+                // Si no está en productosExistentes, revisar si ya estaba en nuevos
+                var nuevo = productosNuevos.FirstOrDefault(p => p.idProducto == idProducto);
+                if (nuevo != default)
+                {
+                    productosNuevos.Remove(nuevo);
+                    productosNuevos.Add((idProducto, nombreProducto, nuevo.cantidad + cantidadNueva, precio));
+                }
+                else
+                {
+                    productosNuevos.Add((idProducto, nombreProducto, cantidadNueva, precio));
+                }
             }
 
-            decimal subtotal = precioUnitario * cantidad;
-            total += subtotal;
-
-            nuevosProductos.Add((idProducto, nombreProducto, cantidad, precioUnitario));
-            lstProductos.Items.Add($"{nombreProducto} x{cantidad} - {subtotal:0.00} €");
-
-            nudCantidad.Value = 1;
+            total += cantidadNueva * precio;
+            ActualizarListaProductos();
             lblTotal.Text = $"Total: {total:0.00} €";
+            nudCantidad.Value = 1;
 
 
         }
 
+        /// <summary>
+        /// Guardar los productos añadidos en la comanda pero se mantiene Activa no se finaliza
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnFinalizar_Click(object sender, EventArgs e)
         {
             if (idComandaActual == 0)
             {
-                MessageBox.Show("Error: la comanda no está correctamente inicializada.");
+                MessageBox.Show("Error al guardar la comanda.");
                 return;
             }
 
@@ -178,22 +229,127 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            foreach (var item in nuevosProductos)
+            //insertar los nuevos productos
+            foreach (var p in productosNuevos)
             {
-                var cmd = new MySqlCommand(
-                    "INSERT INTO DetalleComanda (IdComanda, IdProducto, Cantidad) VALUES (@com, @prod, @cant)", conn);
-                cmd.Parameters.AddWithValue("@com", idComandaActual);
-                cmd.Parameters.AddWithValue("@prod", item.idProducto);
-                cmd.Parameters.AddWithValue("@cant", item.cantidad);
-                cmd.ExecuteNonQuery();
+                var checkCmd = new MySqlCommand(
+                    "SELECT Cantidad FROM DetalleComanda WHERE IdComanda = @com AND IdProducto = @prod", conn);
+                checkCmd.Parameters.AddWithValue("@com", idComandaActual);
+                checkCmd.Parameters.AddWithValue("@prod", p.idProducto);
+
+                var result = checkCmd.ExecuteScalar();
+
+                if (result != null)
+                {
+                    // Si ya estaba, actualizamos la cantidad (sumamos)
+                    int cantidadAnterior = Convert.ToInt32(result);
+                    int nuevaCantidad = cantidadAnterior + p.cantidad;
+
+                    var updateCmd = new MySqlCommand(
+                        "UPDATE DetalleComanda SET Cantidad = @cant WHERE IdComanda = @com AND IdProducto = @prod", conn);
+                    updateCmd.Parameters.AddWithValue("@cant", nuevaCantidad);
+                    updateCmd.Parameters.AddWithValue("@com", idComandaActual);
+                    updateCmd.Parameters.AddWithValue("@prod", p.idProducto);
+                    updateCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    // Si no estaba, lo insertamos como nuevo
+                    var insertCmd = new MySqlCommand(
+                        "INSERT INTO DetalleComanda (IdComanda, IdProducto, Cantidad) VALUES (@com, @prod, @cant)", conn);
+                    insertCmd.Parameters.AddWithValue("@com", idComandaActual);
+                    insertCmd.Parameters.AddWithValue("@prod", p.idProducto);
+                    insertCmd.Parameters.AddWithValue("@cant", p.cantidad);
+                    insertCmd.ExecuteNonQuery();
+                }
             }
 
-
-            nuevosProductos.Clear();
+            //actualizar productos que ya estaban
+            foreach (var p in productosExistentes)
+            {
+                var cmdUpdate = new MySqlCommand(
+                    "UPDATE DetalleComanda SET Cantidad = @cant WHERE IdComanda = @com AND IdProducto = @prod", conn);
+                cmdUpdate.Parameters.AddWithValue("@cant", p.cantidad);
+                cmdUpdate.Parameters.AddWithValue("@com", idComandaActual);
+                cmdUpdate.Parameters.AddWithValue("@prod", p.idProducto);
+                cmdUpdate.ExecuteNonQuery();
+            }
+            // Limpiar listas
+            productosExistentes.Clear();
+            productosNuevos.Clear();
             lstProductos.Items.Clear();
             total = 0;
             lblTotal.Text = "Total: 0.00 €";
 
+            MessageBox.Show("Comanda finalizada correctamente.");
+
+            
+
+
+        }
+
+        /// <summary>
+        /// Cerrar la comanda, esto sería ya en estado finalizada no se puede modificar más
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void btnCerrarComanda_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("¿Seguro que quieres cerrar esta comanda?", "Cerrar comanda", MessageBoxButtons.YesNo);
+            if (result != DialogResult.Yes) return;
+
+            using var conn = new MySqlConnection(Conexion.ConnectionString);
+            conn.Open();
+
+            var cmd = new MySqlCommand("UPDATE Comandas SET Estado = 'Finalizada' WHERE IdComanda = @id", conn);
+            cmd.Parameters.AddWithValue("@id", idComandaActual);
+            cmd.ExecuteNonQuery();
+
+            MessageBox.Show("Comanda cerrada.");
+
+            //Volver al panel de mesas para ver las mesas actualizadas
+            var mesas = new UserControlMesas(idEmpleadoActual);
+            ((FormMenu)this.ParentForm).CargarEnPanel(mesas);
+        }
+
+        /// <summary>
+        /// Eliminar un producto de la lista de la comanda
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBorrarPrdComanda_Click(object sender, EventArgs e)
+        {
+            if (lstProductos.SelectedIndex == -1)
+            {
+                MessageBox.Show("Selecciona un producto para eliminar.");
+                return;
+            }
+
+            string textoProducto = lstProductos.SelectedItem.ToString();
+            string nombre = textoProducto.Split('x')[0].Trim();
+
+            //Eliminar productos existentes
+            var prodExistente = productosExistentes.FirstOrDefault(p => p.nombre == nombre);
+            if (prodExistente != default)
+            {
+                productosExistentes.Remove(prodExistente);
+                total -= prodExistente.precio * prodExistente.cantidad;
+            }
+            else
+            {
+                // Si no estaba en los existentes, buscar en nuevos
+                var prodNuevo = productosNuevos.FirstOrDefault(p => p.nombre == nombre);
+                if (prodNuevo != default)
+                {
+                    productosNuevos.Remove(prodNuevo);
+                    total -= prodNuevo.precio * prodNuevo.cantidad;
+                }
+            }
+
+            // Actualizar la interfaz
+            ActualizarListaProductos();
+            lblTotal.Text = $"Total: {total:0.00} €";
         }
     }
 }

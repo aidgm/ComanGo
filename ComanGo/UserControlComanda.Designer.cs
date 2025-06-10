@@ -35,6 +35,8 @@
             lblTotal = new Label();
             lstProductos = new ListBox();
             btnFinalizar = new Button();
+            btnCerrarComanda = new Button();
+            btnBorrarPrdComanda = new Button();
             ((System.ComponentModel.ISupportInitialize)nudCantidad).BeginInit();
             SuspendLayout();
             // 
@@ -114,14 +116,39 @@
             btnFinalizar.Name = "btnFinalizar";
             btnFinalizar.Size = new Size(160, 40);
             btnFinalizar.TabIndex = 6;
-            btnFinalizar.Text = "Finalizar";
+            btnFinalizar.Text = "Guardar";
             btnFinalizar.UseVisualStyleBackColor = false;
             btnFinalizar.Click += btnFinalizar_Click;
+            // 
+            // btnCerrarComanda
+            // 
+            btnCerrarComanda.BackColor = Color.LightGreen;
+            btnCerrarComanda.FlatStyle = FlatStyle.Flat;
+            btnCerrarComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnCerrarComanda.Location = new Point(330, 430);
+            btnCerrarComanda.Name = "btnCerrarComanda";
+            btnCerrarComanda.Size = new Size(156, 40);
+            btnCerrarComanda.TabIndex = 7;
+            btnCerrarComanda.Text = "Cerrar";
+            btnCerrarComanda.UseVisualStyleBackColor = false;
+            btnCerrarComanda.Click += btnCerrarComanda_Click;
+            // 
+            // btnBorrarPrdComanda
+            // 
+            btnBorrarPrdComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnBorrarPrdComanda.Location = new Point(30, 430);
+            btnBorrarPrdComanda.Name = "btnBorrarPrdComanda";
+            btnBorrarPrdComanda.Size = new Size(136, 100);
+            btnBorrarPrdComanda.TabIndex = 0;
+            btnBorrarPrdComanda.Text = "Borrar producto";
+            btnBorrarPrdComanda.Click += btnBorrarPrdComanda_Click;
             // 
             // UserControlComanda
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnBorrarPrdComanda);
+            Controls.Add(btnCerrarComanda);
             Controls.Add(btnFinalizar);
             Controls.Add(lstProductos);
             Controls.Add(lblTotal);
@@ -131,7 +158,6 @@
             Controls.Add(lblTitulo);
             Name = "UserControlComanda";
             Size = new Size(732, 553);
-            Load += UserControlComanda_Load;
             ((System.ComponentModel.ISupportInitialize)nudCantidad).EndInit();
             ResumeLayout(false);
         }
@@ -145,5 +171,7 @@
         private Label lblTotal;
         private ListBox lstProductos;
         private Button btnFinalizar;
+        private Button btnCerrarComanda;
+        private Button btnBorrarPrdComanda;
     }
 }

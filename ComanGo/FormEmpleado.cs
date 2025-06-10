@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,12 +14,13 @@ namespace ComanGo
 {
     public partial class FormEmpleado : Form
     {
+        //saber si se estña editando o creando
         private int? idEmpleado = null;
 
         public FormEmpleado()
         {
             InitializeComponent();
-            if (cbRol.Items.Count == 0) //  evita duplicados
+            if (cbRol.Items.Count == 0) //Evitar duplicados
             {
                 cbRol.Items.AddRange(new string[] { "admin", "empleado" });
             }
@@ -26,6 +28,13 @@ namespace ComanGo
             lblTitulo.Text = "Agregar Empleado";
         }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="nombre"></param>
+        /// <param name="usuario"></param>
+        /// <param name="rol"></param>
         public FormEmpleado(int id, string nombre, string usuario, string rol)
             : this()
         {
@@ -35,18 +44,30 @@ namespace ComanGo
             cbRol.SelectedItem = rol;
             lblTitulo.Text = "Editar Empleado";
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            //Recibir lo que escribe el usuario
             string nombre = txtNombre.Text.Trim();
             string usuario = txtUsuario.Text.Trim();
             string contrasena = txtContraseña.Text.Trim();
             string rol = cbRol.SelectedItem?.ToString() ?? "";
 
+            //comprobar que estén todos los campos llenos
             if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(usuario) ||
                 string.IsNullOrWhiteSpace(contrasena) || string.IsNullOrWhiteSpace(rol))
             {
                 MessageBox.Show("Completa todos los campos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            //validar que el nombre solo tenga letras
+            if (!Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
+            {
+                MessageBox.Show("El nombre solo puede contener letras y espacios.", "Nombre no válido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -55,23 +76,24 @@ namespace ComanGo
                 using var conn = new MySqlConnection(Conexion.ConnectionString);
                 conn.Open();
 
+                //si el id es nulo, es que es nuevo empleado si no se crea
                 if (idEmpleado == null)
                 {
-                    var insert = new MySqlCommand("INSERT INTO Empleados (Nombre, Usuario, Contrasena, Rol) VALUES (@n, @u, @c, @r)", conn);
-                    insert.Parameters.AddWithValue("@n", nombre);
-                    insert.Parameters.AddWithValue("@u", usuario);
-                    insert.Parameters.AddWithValue("@c", contrasena);
-                    insert.Parameters.AddWithValue("@r", rol);
+                    var insert = new MySqlCommand("INSERT INTO Empleados (Nombre, Usuario, Contrasena, Rol) VALUES (@nombre, @usuario, @contraseña, @rol)", conn);
+                    insert.Parameters.AddWithValue("@nombre", nombre);
+                    insert.Parameters.AddWithValue("@usuario", usuario);
+                    insert.Parameters.AddWithValue("@contraseña", contrasena);
+                    insert.Parameters.AddWithValue("@rol", rol);
                     insert.ExecuteNonQuery();
                     MessageBox.Show("Empleado agregado.");
                 }
                 else
                 {
-                    var update = new MySqlCommand("UPDATE Empleados SET Nombre=@n, Usuario=@u, Contrasena=@c, Rol=@r WHERE IdEmpleado=@id", conn);
-                    update.Parameters.AddWithValue("@n", nombre);
-                    update.Parameters.AddWithValue("@u", usuario);
-                    update.Parameters.AddWithValue("@c", contrasena);
-                    update.Parameters.AddWithValue("@r", rol);
+                    var update = new MySqlCommand("UPDATE Empleados SET Nombre=@nombre, Usuario=@usuario, Contrasena=@contraseña, Rol=@rol WHERE IdEmpleado=@id", conn);
+                    update.Parameters.AddWithValue("@nombre", nombre);
+                    update.Parameters.AddWithValue("@usuario", usuario);
+                    update.Parameters.AddWithValue("@contraseña", contrasena);
+                    update.Parameters.AddWithValue("@rol", rol);
                     update.Parameters.AddWithValue("@id", idEmpleado);
                     update.ExecuteNonQuery();
                     MessageBox.Show("Empleado actualizado.");
@@ -92,11 +114,5 @@ namespace ComanGo
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-    
     }
 }

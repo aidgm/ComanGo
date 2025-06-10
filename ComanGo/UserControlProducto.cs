@@ -19,6 +19,9 @@ namespace ComanGo
             CargarProductos();
         }
 
+        /// <summary>
+        /// método para cargar los producto de la BD en el DataGrid
+        /// </summary>
         private void CargarProductos()
         {
             using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -30,15 +33,26 @@ namespace ComanGo
             adapter.Fill(dt);
             dgvProductos.DataSource = dt;
         }
+
+        /// <summary>
+        /// Al pulsar en el botón Añadir se abre el formulario FormProducto
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAñadir_Click(object sender, EventArgs e)
         {
-            var form = new FormProducto(); // Ventana para añadir producto
+            var form = new FormProducto();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 CargarProductos();
             }
         }
 
+        /// <summary>
+        /// Eliminar producto seleccionado en el DataGrid 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             if (dgvProductos.SelectedRows.Count == 0)
@@ -60,6 +74,11 @@ namespace ComanGo
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             if (dgvProductos.SelectedRows.Count == 0)
