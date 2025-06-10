@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEmpleado));
             lblTitulo = new Label();
             lblNombre = new Label();
             txtNombre = new TextBox();
@@ -172,6 +173,7 @@
             Controls.Add(lblNombre);
             Controls.Add(lblTitulo);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormEmpleado";

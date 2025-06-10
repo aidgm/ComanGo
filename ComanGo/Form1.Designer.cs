@@ -30,6 +30,7 @@ namespace ComanGo
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLogin));
             pbLogo = new PictureBox();
             label1 = new Label();
             panelUsuario = new Panel();
@@ -175,6 +176,7 @@ namespace ComanGo
             Controls.Add(label1);
             Controls.Add(pbLogo);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "FormLogin";
             StartPosition = FormStartPosition.CenterScreen;
