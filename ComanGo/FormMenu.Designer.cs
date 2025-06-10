@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMenu));
             panelLateral = new Panel();
             panelCerrarSesión = new Panel();
             btnCerrarSesion = new Button();
@@ -253,11 +254,11 @@
             Controls.Add(panelContenido);
             Controls.Add(panelLateral);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "FormMenu";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ComanGo";
-            
             panelLateral.ResumeLayout(false);
             panelLateral.PerformLayout();
             panelCerrarSesión.ResumeLayout(false);
