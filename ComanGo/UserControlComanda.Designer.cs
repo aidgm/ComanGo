@@ -109,38 +109,41 @@
             // 
             // btnFinalizar
             // 
-            btnFinalizar.BackColor = Color.LightGreen;
-            btnFinalizar.FlatStyle = FlatStyle.Flat;
+            btnFinalizar.BackColor = Color.ForestGreen;
             btnFinalizar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnFinalizar.Location = new Point(530, 430);
+            btnFinalizar.ForeColor = Color.Yellow;
+            btnFinalizar.Location = new Point(438, 414);
             btnFinalizar.Name = "btnFinalizar";
-            btnFinalizar.Size = new Size(160, 40);
+            btnFinalizar.Size = new Size(252, 56);
             btnFinalizar.TabIndex = 6;
-            btnFinalizar.Text = "Guardar";
+            btnFinalizar.Text = "Guardar comanda";
             btnFinalizar.UseVisualStyleBackColor = false;
             btnFinalizar.Click += btnFinalizar_Click;
             // 
             // btnCerrarComanda
             // 
-            btnCerrarComanda.BackColor = Color.LightGreen;
-            btnCerrarComanda.FlatStyle = FlatStyle.Flat;
+            btnCerrarComanda.BackColor = Color.ForestGreen;
             btnCerrarComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnCerrarComanda.Location = new Point(330, 430);
+            btnCerrarComanda.ForeColor = Color.Yellow;
+            btnCerrarComanda.Location = new Point(438, 476);
             btnCerrarComanda.Name = "btnCerrarComanda";
-            btnCerrarComanda.Size = new Size(156, 40);
+            btnCerrarComanda.Size = new Size(252, 55);
             btnCerrarComanda.TabIndex = 7;
-            btnCerrarComanda.Text = "Cerrar";
+            btnCerrarComanda.Text = "Cerrar comanda";
             btnCerrarComanda.UseVisualStyleBackColor = false;
             btnCerrarComanda.Click += btnCerrarComanda_Click;
             // 
             // btnBorrarPrdComanda
             // 
+            btnBorrarPrdComanda.BackColor = Color.ForestGreen;
             btnBorrarPrdComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnBorrarPrdComanda.Location = new Point(30, 430);
+            btnBorrarPrdComanda.ForeColor = Color.Yellow;
+            btnBorrarPrdComanda.Location = new Point(30, 414);
             btnBorrarPrdComanda.Name = "btnBorrarPrdComanda";
-            btnBorrarPrdComanda.Size = new Size(136, 100);
+            btnBorrarPrdComanda.Size = new Size(220, 55);
             btnBorrarPrdComanda.TabIndex = 0;
             btnBorrarPrdComanda.Text = "Borrar producto";
+            btnBorrarPrdComanda.UseVisualStyleBackColor = false;
             btnBorrarPrdComanda.Click += btnBorrarPrdComanda_Click;
             // 
             // UserControlComanda
