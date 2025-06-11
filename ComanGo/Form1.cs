@@ -93,6 +93,7 @@ namespace ComanGo
             {
                 lblError.Text = "Por favor, completa todos los campos.";
                 lblError.Visible = true;
+                timerError.Start();
                 return;
             }
 
