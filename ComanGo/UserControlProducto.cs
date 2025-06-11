@@ -65,12 +65,32 @@ namespace ComanGo
 
             if (MessageBox.Show("¿Eliminar este producto?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                using var conn = new MySqlConnection(Conexion.ConnectionString);
-                conn.Open();
-                var cmd = new MySqlCommand("DELETE FROM Productos WHERE IdProducto = @id", conn);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
-                CargarProductos();
+                //capturar excepción para que no rompa la app
+
+                try
+                {
+                    using var conn = new MySqlConnection(Conexion.ConnectionString);
+                    conn.Open();
+                    var cmd = new MySqlCommand("DELETE FROM Productos WHERE IdProducto = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                    CargarProductos();
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number == 1451) //Error predefinido por restriccion de clave ext
+                    {
+                        MessageBox.Show("No se puede eliminar este producto porque está siendo utilizado en una comanda.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error de base de datos: " + ex.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
             }
         }
 
