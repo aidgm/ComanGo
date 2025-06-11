@@ -27,11 +27,12 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            string query = "SELECT IdProducto, Nombre, Precio FROM Productos";
+            string query = "SELECT IdProducto, Nombre, Precio, Activo FROM Productos";
             var adapter = new MySqlDataAdapter(query, conn);
             var dt = new DataTable();
             adapter.Fill(dt);
             dgvProductos.DataSource = dt;
+
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace ComanGo
                 {
                     using var conn = new MySqlConnection(Conexion.ConnectionString);
                     conn.Open();
-                    var cmd = new MySqlCommand("DELETE FROM Productos WHERE IdProducto = @id", conn);
+                    var cmd = new MySqlCommand("UPDATE Productos SET Activo = 0 WHERE IdProducto = @id", conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
                     CargarProductos();

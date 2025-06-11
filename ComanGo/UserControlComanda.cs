@@ -66,7 +66,7 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            var cmd = new MySqlCommand("SELECT IdProducto, Nombre, Precio FROM Productos", conn);
+            var cmd = new MySqlCommand("SELECT IdProducto, Nombre, Precio FROM Productos WHERE Activo=1", conn);
             var reader = cmd.ExecuteReader();
             var items = new List<(int IdProducto, string Nombre, decimal Precio)>();
 
