@@ -150,7 +150,10 @@ namespace ComanGo
                 MessageBox.Show("No se puede eliminar esta mesa porque tiene comandas asociadas.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            
+            //capturar la excepción para que no rompa la aplicación
+            try
+            {
             // Eliminar la base de datos
             var cmd = new MySqlCommand("DELETE FROM Mesas WHERE IdMesa = @id", conn);
             cmd.Parameters.AddWithValue("@id", idMesa);
@@ -158,6 +161,22 @@ namespace ComanGo
 
             //Volver a recargar
             CargarMesas();
+            }
+            catch (MySqlException ex)
+            {
+                if(ex.Number == 1451) //Error predefinido por restriccion de clave ext
+                {
+                    MessageBox.Show("No se puede eliminar mesa por estar registrada en el historial", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                }else
+                {
+                    MessageBox.Show("Error al eliminar la mesa:\n" + ex.Message);
+                }
+            }
+
+            
+
+            
         }
 
     }

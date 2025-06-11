@@ -281,11 +281,6 @@ namespace ComanGo
             total = 0;
             lblTotal.Text = "Total: 0.00 €";
 
-            MessageBox.Show("Comanda finalizada correctamente.");
-
-            
-
-
         }
 
         /// <summary>
@@ -296,9 +291,6 @@ namespace ComanGo
 
         private void btnCerrarComanda_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("¿Seguro que quieres cerrar esta comanda?", "Cerrar comanda", MessageBoxButtons.YesNo);
-            if (result != DialogResult.Yes) return;
-
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
