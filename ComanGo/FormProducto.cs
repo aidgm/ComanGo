@@ -44,13 +44,15 @@ namespace ComanGo
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             string nombre = txtNombre.Text.Trim();
-            //validar que el precio sea correcto, el campo de nombre no esté vacío
+
+            // Validar que el precio sea un número decimal válido
             if (!decimal.TryParse(txtPrecio.Text, out decimal precio))
             {
                 MessageBox.Show("Introduce un precio válido.");
                 return;
             }
 
+            // Validar que el nombre no esté vacío y solo tenga letras y espacios
             if (string.IsNullOrEmpty(nombre) || !Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"))
             {
                 MessageBox.Show("El nombre no puede estar vacío ni contener números.");
@@ -60,7 +62,21 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            //si el producto es nuevo se inserta y si no se actualiza
+            // Verificar si ya existe un producto con el mismo nombre y precio
+            var checkCmd = new MySqlCommand(
+                "SELECT COUNT(*) FROM Productos WHERE Nombre = @nombre AND Precio = @precio", conn);
+            checkCmd.Parameters.AddWithValue("@nombre", nombre);
+            checkCmd.Parameters.AddWithValue("@precio", precio);
+            int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+            // Si se intenta crear un nuevo producto repetido, se bloquea
+            if (count > 0 && idProducto == null)
+            {
+                MessageBox.Show("Ya existe un producto con ese nombre y precio.");
+                return;
+            }
+
+            // Preparar la consulta según si es nuevo producto o edición
             string query;
             if (idProducto == null)
             {
@@ -71,10 +87,10 @@ namespace ComanGo
                 query = "UPDATE Productos SET Nombre = @nombre, Precio = @precio WHERE IdProducto = @id";
             }
 
+            // Ejecutar la consulta
             using var cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@nombre", nombre);
             cmd.Parameters.AddWithValue("@precio", precio);
-
             if (idProducto != null)
                 cmd.Parameters.AddWithValue("@id", idProducto);
 

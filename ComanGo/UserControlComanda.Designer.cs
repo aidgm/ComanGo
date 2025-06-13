@@ -35,7 +35,6 @@
             lblTotal = new Label();
             lstProductos = new ListBox();
             btnFinalizar = new Button();
-            btnCerrarComanda = new Button();
             btnBorrarPrdComanda = new Button();
             ((System.ComponentModel.ISupportInitialize)nudCantidad).BeginInit();
             SuspendLayout();
@@ -120,22 +119,9 @@
             btnFinalizar.UseVisualStyleBackColor = false;
             btnFinalizar.Click += btnFinalizar_Click;
             // 
-            // btnCerrarComanda
-            // 
-            btnCerrarComanda.BackColor = Color.ForestGreen;
-            btnCerrarComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnCerrarComanda.ForeColor = Color.Yellow;
-            btnCerrarComanda.Location = new Point(438, 476);
-            btnCerrarComanda.Name = "btnCerrarComanda";
-            btnCerrarComanda.Size = new Size(252, 55);
-            btnCerrarComanda.TabIndex = 7;
-            btnCerrarComanda.Text = "Cerrar comanda";
-            btnCerrarComanda.UseVisualStyleBackColor = false;
-            btnCerrarComanda.Click += btnCerrarComanda_Click;
-            // 
             // btnBorrarPrdComanda
             // 
-            btnBorrarPrdComanda.BackColor = Color.ForestGreen;
+            btnBorrarPrdComanda.BackColor = Color.Red;
             btnBorrarPrdComanda.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnBorrarPrdComanda.ForeColor = Color.Yellow;
             btnBorrarPrdComanda.Location = new Point(30, 414);
@@ -151,7 +137,6 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(btnBorrarPrdComanda);
-            Controls.Add(btnCerrarComanda);
             Controls.Add(btnFinalizar);
             Controls.Add(lstProductos);
             Controls.Add(lblTotal);
@@ -174,7 +159,6 @@
         private Label lblTotal;
         private ListBox lstProductos;
         private Button btnFinalizar;
-        private Button btnCerrarComanda;
         private Button btnBorrarPrdComanda;
     }
 }

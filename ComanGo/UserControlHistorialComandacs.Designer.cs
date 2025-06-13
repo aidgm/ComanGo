@@ -60,6 +60,7 @@
             dgvComandas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvComandas.Size = new Size(697, 173);
             dgvComandas.TabIndex = 0;
+            dgvComandas.AllowUserToAddRows = false;
             dgvComandas.CellContentClick += dgvComandas_CellContentClick;
             // 
             // dgvDetalle

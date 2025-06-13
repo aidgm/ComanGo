@@ -86,7 +86,7 @@
             // 
             // btnEliminar
             // 
-            btnEliminar.BackColor = Color.ForestGreen;
+            btnEliminar.BackColor = Color.Red;
             btnEliminar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             btnEliminar.ForeColor = Color.Yellow;
             btnEliminar.Location = new Point(498, 316);

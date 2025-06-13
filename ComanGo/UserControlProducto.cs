@@ -27,7 +27,7 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            string query = "SELECT IdProducto, Nombre, Precio, Activo FROM Productos";
+            string query = "SELECT IdProducto, Nombre, Precio FROM Productos";
             var adapter = new MySqlDataAdapter(query, conn);
             var dt = new DataTable();
             adapter.Fill(dt);
@@ -66,22 +66,40 @@ namespace ComanGo
 
             if (MessageBox.Show("¿Eliminar este producto?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                //capturar excepción para que no rompa la app
-
                 try
                 {
                     using var conn = new MySqlConnection(Conexion.ConnectionString);
                     conn.Open();
-                    var cmd = new MySqlCommand("UPDATE Productos SET Activo = 0 WHERE IdProducto = @id", conn);
+
+                    //Comprobar si el producto está en comandas abiertas
+                    var check = new MySqlCommand(@"
+                        SELECT COUNT(*) 
+                        FROM DetalleComanda dc
+                        JOIN Comandas c ON dc.IdComanda = c.IdComanda
+                        WHERE dc.IdProducto = @id AND c.Estado = 'Abierta'", conn);
+                    
+                    check.Parameters.AddWithValue("@id", id);
+                    int enUso = Convert.ToInt32(check.ExecuteScalar());
+
+                    if (enUso > 0)
+                    {
+                        MessageBox.Show("Este producto no se puede eliminar porque está en uso en comandas activas.");
+                        return;
+                    }
+
+                    //intentar eliminar
+                    var cmd = new MySqlCommand("DELETE FROM Productos WHERE IdProducto = @id", conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
+
                     CargarProductos();
                 }
                 catch (MySqlException ex)
                 {
-                    if (ex.Number == 1451) //Error predefinido por restriccion de clave ext
+                    if (ex.Number == 1451)
                     {
-                        MessageBox.Show("No se puede eliminar este producto porque está siendo utilizado en una comanda.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("No se puede eliminar este producto porque ya ha sido utilizado en una comanda (aunque esté finalizada).",
+                                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
@@ -90,8 +108,9 @@ namespace ComanGo
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: " + ex.Message);
+                    MessageBox.Show("Error general: " + ex.Message);
                 }
+
             }
         }
 

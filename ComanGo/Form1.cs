@@ -11,10 +11,11 @@ namespace ComanGo
         public FormLogin()
         {
             InitializeComponent();
-            this.FormClosed += (s, args) => Application.Exit(); //se cierra la app si se cierra la ventana de inicio(login)
+            
             VerificarCrearBD();
             lblError.Visible = false;
             timerError.Tick += timerError_Tick;
+            this.Load += FormLogin_Load_1;
 
         }
 
@@ -114,15 +115,25 @@ namespace ComanGo
                     Conexion.RolUsuarioActual = reader["Rol"].ToString();
                     int idEmpeado = Convert.ToInt32(reader["IdEmpleado"]);
 
-                    this.Hide();
+                    
                     var menu = new FormMenu(idEmpeado);
-                    menu.FormClosed += (s, arga) => this.Show(); //vuelta al login después de cerrar el FormMenu
+                    menu.FormClosed += (s, arga) => {
+                        var nuevoLogin = new FormLogin();
+                        nuevoLogin.Show();
+                    };
                     menu.Show();
+                    this.Hide(); // ocultar login
+                    menu.FormClosed += (s, args) =>
+                    {
+                        this.LimpiarCampos();
+                        this.Show();//mostrar login 
+                    };
+
                 }
                 else
                 {
                     //Nueva validación por si no existe o está mal escrito
-                    lblError.Text = "Usuario o contraseña incorrectos.";
+                    lblError.Text = "       Usuario o contraseña incorrectos.";
                     lblError.Visible = true;
                     timerError.Start();
                 }
@@ -135,7 +146,7 @@ namespace ComanGo
 
         private void FormLogin_Load_1(object sender, EventArgs e)
         {
-
+            LimpiarCampos();
         }
 
         // Temporizador para ocultar el label de error 
@@ -144,5 +155,13 @@ namespace ComanGo
             lblError.Visible = false;
             timerError.Stop();
         }
+
+        //limpiar los campos
+        public void LimpiarCampos()
+        {
+            txtUsuario.Text = "";
+            txtContraseña.Text = "";
+        }
+
     }
 }

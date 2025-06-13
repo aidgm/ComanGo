@@ -138,7 +138,7 @@ namespace ComanGo
             lblError.AutoSize = true;
             lblError.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblError.ForeColor = Color.Red;
-            lblError.Location = new Point(334, 490);
+            lblError.Location = new Point(312, 500);
             lblError.Name = "lblError";
             lblError.Size = new Size(0, 28);
             lblError.TabIndex = 5;

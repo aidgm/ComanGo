@@ -20,9 +20,11 @@ namespace ComanGo
         {
             InitializeComponent();
             esAdmin = usuarioEsAdmin;
-            //solo los admin pueden eliminar empleados
+            //solo los admin pueden gestionar empleados
             //para el resto se desactiva ese botón
-            btnEliminar.Enabled = esAdmin;
+            btnEliminar.Visible= esAdmin;
+            btnAgregar.Visible = esAdmin;
+            btnEditar.Visible = esAdmin;
             CargarEmpleados();
         }
 

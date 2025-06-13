@@ -53,9 +53,13 @@ namespace ComanGo
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            var login = new FormLogin();
+            login.Show();
             this.Close();
+
         }
 
-        
+
     }
 }

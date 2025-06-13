@@ -66,8 +66,9 @@ namespace ComanGo
             using var conn = new MySqlConnection(Conexion.ConnectionString);
             conn.Open();
 
-            var cmd = new MySqlCommand("SELECT IdProducto, Nombre, Precio FROM Productos WHERE Activo=1", conn);
+            var cmd = new MySqlCommand("SELECT IdProducto, Nombre, Precio FROM Productos", conn);
             var reader = cmd.ExecuteReader();
+
             var items = new List<(int IdProducto, string Nombre, decimal Precio)>();
 
             while (reader.Read())
@@ -75,11 +76,14 @@ namespace ComanGo
                 int id = reader.GetInt32("IdProducto");
                 string nombre = reader.GetString("Nombre");
                 decimal precio = reader.GetDecimal("Precio");
+
                 items.Add((id, nombre, precio));
             }
 
             cbProductos.DataSource = items;
-            cbProductos.DisplayMember = "Nombre";
+            cbProductos.DisplayMember = "Nombre"; // <-- Esto no funciona con tuplas
+
+
         }
 
         /// <summary>
@@ -164,18 +168,17 @@ namespace ComanGo
         /// <param name="e"></param>
         private void btnAgregarProducto_Click(object sender, EventArgs e)
         {
-            if (cbProductos.SelectedItem is not ValueTuple<int, string, decimal> seleccionado)
+            if (cbProductos.SelectedValue is not ValueTuple<int, string, decimal> seleccionado)
             {
                 MessageBox.Show("Error al obtener el producto.");
                 return;
-            }
 
+            }
             int idProducto = seleccionado.Item1;
             string nombreProducto = seleccionado.Item2;
             decimal precio = seleccionado.Item3;
             int cantidadNueva = (int)nudCantidad.Value;
 
-            
 
             //Comprobar si ya estaba ese producto en la comanda
             var existente = productosExistentes.FirstOrDefault(p => p.idProducto == idProducto);
@@ -283,27 +286,7 @@ namespace ComanGo
 
         }
 
-        /// <summary>
-        /// Cerrar la comanda, esto sería ya en estado finalizada no se puede modificar más
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-
-        private void btnCerrarComanda_Click(object sender, EventArgs e)
-        {
-            using var conn = new MySqlConnection(Conexion.ConnectionString);
-            conn.Open();
-
-            var cmd = new MySqlCommand("UPDATE Comandas SET Estado = 'Finalizada' WHERE IdComanda = @id", conn);
-            cmd.Parameters.AddWithValue("@id", idComandaActual);
-            cmd.ExecuteNonQuery();
-
-            MessageBox.Show("Comanda cerrada.");
-
-            //Volver al panel de mesas para ver las mesas actualizadas
-            var mesas = new UserControlMesas(idEmpleadoActual);
-            ((FormMenu)this.ParentForm).CargarEnPanel(mesas);
-        }
+       
 
         /// <summary>
         /// Eliminar un producto de la lista de la comanda

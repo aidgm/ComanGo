@@ -11,14 +11,12 @@ CREATE TABLE IF NOT EXISTS Empleados (
     Usuario VARCHAR(30) UNIQUE,
     Contrasena VARCHAR(30),
     Rol VARCHAR(20) DEFAULT 'empleado'
-
 );
 
 CREATE TABLE IF NOT EXISTS Productos (
     IdProducto INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(50) UNIQUE,
-    Precio DECIMAL(10, 2),
-    Activo TINYINT(1) DEFAULT 1 
+    Nombre VARCHAR(50),
+    Precio DECIMAL(10, 2)
 );
 
 

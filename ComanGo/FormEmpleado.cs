@@ -85,7 +85,6 @@ namespace ComanGo
                     insert.Parameters.AddWithValue("@contraseña", contrasena);
                     insert.Parameters.AddWithValue("@rol", rol);
                     insert.ExecuteNonQuery();
-                    MessageBox.Show("Empleado agregado.");
                 }
                 else
                 {

@@ -39,7 +39,7 @@ namespace ComanGo
         {
             if (e.RowIndex >= 0 && dgvComandas.Columns[e.ColumnIndex].Name == "Estado")
             {
-                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["IdComanda"].Value);
+                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["Num_Comanda"].Value);
                 string nuevoEstado = dgvComandas.Rows[e.RowIndex].Cells["Estado"].Value.ToString();
 
                 using var conn = new MySqlConnection(Conexion.ConnectionString);
@@ -68,8 +68,8 @@ namespace ComanGo
                     return;
                 }
 
-                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["IdComanda"].Value);
-                string nombreMesa = dgvComandas.Rows[e.RowIndex].Cells["NombreMesa"].Value.ToString();
+                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["Num_Comanda"].Value);
+                string nombreMesa = dgvComandas.Rows[e.RowIndex].Cells["Mesa"].Value.ToString();
                 int idEmpleado = Conexion.IdUsuarioActual;
 
                 
@@ -108,7 +108,7 @@ namespace ComanGo
             conn.Open();
 
             var query = @"
-                SELECT c.IdComanda, m.NombreMesa, e.Nombre AS Empleado, c.Fecha, c.Estado
+                SELECT c.IdComanda AS Num_Comanda, m.NombreMesa AS Mesa, e.Nombre AS Empleado, c.Fecha, c.Estado
                 FROM Comandas c
                 JOIN Mesas m ON c.IdMesa = m.IdMesa
                 JOIN Empleados e ON c.IdEmpleado = e.IdEmpleado
@@ -149,7 +149,7 @@ namespace ComanGo
         {
             if (e.RowIndex >= 0)
             {
-                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["IdComanda"].Value);
+                int idComanda = Convert.ToInt32(dgvComandas.Rows[e.RowIndex].Cells["Num_Comanda"].Value);
                 MostrarDetalleComanda(idComanda);
             }
         }
@@ -166,7 +166,7 @@ namespace ComanGo
             var query = @"
                 SELECT p.Nombre AS Producto, dc.Cantidad, p.Precio, (p.Precio * dc.Cantidad) AS Subtotal
                 FROM DetalleComanda dc
-                JOIN Productos p ON dc.IdProducto = p.IdProducto
+                LEFT JOIN Productos p ON dc.IdProducto = p.IdProducto
                 WHERE dc.IdComanda = @id";
 
             var cmd = new MySqlCommand(query, conn);
