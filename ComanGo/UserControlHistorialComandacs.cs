@@ -64,7 +64,7 @@ namespace ComanGo
                 string estado = dgvComandas.Rows[e.RowIndex].Cells["Estado"].Value.ToString();
                 if (estado != "Abierta")
                 {
-                    MessageBox.Show("Esta comanda ya está finalizada.");
+                    MessageBox.Show("Esta comanda ya está finalizada, no se puede modificar.");
                     return;
                 }
 
